@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
-
 # Load the model
 model = joblib.load('svm_model.pkl')
 scale = joblib.load('scaler.pkl')
@@ -66,7 +65,10 @@ if st.button("Predict"):
     #st.write(advice)
 
    # Calculate SHAP values and display force plot
-    explainer = shap.KernelExplainer(model,scale.transform(features))
+    dataset_1=pd.read_excel(r"新建 Microsoft Excel 工作表.xlsx")
+    X_test=dataset_1.iloc[:,1:]
+    y_test=dataset_1.iloc[:,0]
+    explainer = shap.KernelExplainer(model.predict_proba, X_train_scaled[:20])
     shap_values = explainer.shap_values(features_scale)
     print(shap_values,features.shape)
     shap.force_plot(explainer.expected_value[1], shap_values[1],features,feature_names=feature_names,show=False,matplotlib=True)
