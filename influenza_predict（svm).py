@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
+
 # Load the model
 model = joblib.load('svm_model.pkl')
 scale = joblib.load('scaler.pkl')
@@ -65,7 +66,7 @@ if st.button("Predict"):
     #st.write(advice)
 
    # Calculate SHAP values and display force plot
-    dataset_1=pd.read_csv(r"test.csv")
+    dataset_1 = pd.read_excel(r"新建 Microsoft Excel 工作表.xlsx")
     X_test=dataset_1.iloc[:,1:]
     X_test_scaled=scale.transform(X_test)
     background_data = shap.sample(X_test_scaled, 50)
