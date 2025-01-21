@@ -6,53 +6,34 @@ import shap
 import matplotlib.pyplot as plt
 
 # Load the model
-model = joblib.load('rf_model.pkl')
+model = joblib.load('svm_model.pkl')
 scale = joblib.load('scaler.pkl')
 # Define feature names
-feature_names = [
-    'NEUT%','PDW','PLT-Crit','PCT','AST','BUN','C3','B-cell %','total T-cell Count','CD4+ T-cell Count','NK-cell Count','Glucose'
-]
-
+feature_names = ['NEUT%','PCT','AST','Glucose','BUN','C3','B-cell %','total T-cell Count','CD4+ T-cell Count','NK-cell Count']
 # Streamlit user interface
 st.title("Critical influenza predictor for hospitalized children")
 # NEUT%: numerical input
-neut = st.number_input("NEUT%:", min_value=0.0, max_value=100.0, value=50.0)\
-
-# PDW: numerical input
-pdw = st.number_input("PDW:", min_value=0.0, max_value=100.0, value=10.0)
-
-# PLT-Crit: numerical input
-pltcit = st.number_input("PLT-Crit:", min_value=0.0, max_value=100.0, value=10.0)
-
+neut = st.number_input("NEUT%:", min_value=0.0, max_value=100.0, value=50.0)
 # PCT: numerical input
 pct = st.number_input("PCT:", min_value=0.0, max_value=200.0, value=0.5)
-
 # AST: numerical input
 ast = st.number_input("AST:", min_value=0.0, max_value=20000.0, value=100.0)
-
 # Glucose: numerical input
 glucose = st.number_input("Glucose:", min_value=0.0, max_value=100.0, value=5.0)
-
 # BUN: numerical input
 bun = st.number_input("BUN:", min_value=0.0, max_value=100.0, value=20.0)
-
 # C3: numerical input
 c3 = st.number_input("C3:", min_value=0.0, max_value=5.0, value=1.0)
-
 # total T-cell Count: numerical input
 tcount= st.number_input("total T-cell Count:", min_value=0.0, max_value=10000.0, value=10.0)
-
 # B-cell%: numerical input
 bcell = st.number_input("B-cell%:", min_value=0.0, max_value=100.0, value=20.0)
-
 # CD4+Tcell count: numerical input
 cd4 = st.number_input("CD4+T cell count:", min_value=0.0, max_value=50000.0, value=1000.0)
-
 # NK-cell Count: numerical input
 nk= st.number_input("NK cell:", min_value=0.0, max_value=10000.0, value=10.0)
-
 # Process inputs and make predictions
-feature_values = [neut, pdw, pltcit, pct, ast, glucose, bun, c3, tcount, bcell, cd4,nk]
+feature_values = [neut,pct, ast, glucose, bun, c3, tcount, bcell, cd4,nk]
 features = np.array([feature_values])
 features_scale=pd.DataFrame(scale.transform(features),columns=feature_names)
 if st.button("Predict"):
@@ -85,7 +66,7 @@ if st.button("Predict"):
     #st.write(advice)
 
    # Calculate SHAP values and display force plot
-    explainer = shap.TreeExplainer(model)
+    explainer = shap.KernelExplainer(model)
     shap_values = explainer.shap_values(features_scale)
     print(shap_values,features.shape)
     shap.force_plot(explainer.expected_value[1], shap_values[1],features,feature_names=feature_names,show=False,matplotlib=True)
