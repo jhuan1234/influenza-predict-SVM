@@ -67,8 +67,9 @@ if st.button("Predict"):
    # Calculate SHAP values and display force plot
     dataset_1=pd.read_excel(r"新建 Microsoft Excel 工作表.xlsx")
     X_test=dataset_1.iloc[:,1:]
-    y_test=dataset_1.iloc[:,0]
-    explainer = shap.KernelExplainer(model.predict_proba, X_train_scaled[:20])
+    X_test_scaled=scale.transform(X_test)
+    background_data = shap.sample(X_test_scaled, 50)
+    explainer = shap.KernelExplainer(model.predict_proba, background_data)
     shap_values = explainer.shap_values(features_scale)
     print(shap_values,features.shape)
     shap.force_plot(explainer.expected_value[1], shap_values[1],features,feature_names=feature_names,show=False,matplotlib=True)
