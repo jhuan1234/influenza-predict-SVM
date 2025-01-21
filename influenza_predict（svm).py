@@ -67,7 +67,7 @@ if st.button("Predict"):
 
    # Calculate SHAP values and display force plot
     # 打开 Excel 文件
-    file_path = "新建Microsoft Excel 工作表.xlsx"  # 替换为你的文件路径
+    file_path = "https://raw.githubusercontent.com/jhuan1234/influenza-predict-SVM/main/新建Microsoft Excel 工作表.xlsx"      
     dataset_1 = load_workbook(filename=file_path)
     X_test=dataset_1.iloc[:,1:]
     X_test_scaled=scale.transform(X_test)
